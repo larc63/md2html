@@ -1,0 +1,26 @@
+{
+  "name": "md2html",
+  "version": "0.0.1",
+  "description": "Markdown to html converter",
+  "scripts": {
+  "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larc63/md2html.git"
+  },
+  "keywords": [
+    "markdown",
+    "converter"
+  ],
+  "author": "Luis A. Rodriguez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/larc63/md2html/issues"
+  },
+  "homepage": "https://github.com/larc63/md2html#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "jasmine": "^3.7.0"
+  }
+}
