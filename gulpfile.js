@@ -1,4 +1,5 @@
 const {
+    series,
     watch
 } = require('gulp');
 
@@ -23,4 +24,4 @@ const test = function () {
 }
 
 exports.default = test;
-exports.test = test;
+exports.test = series(runJasmine, test);
