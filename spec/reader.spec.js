@@ -1,4 +1,4 @@
-const { ImageElement } = require("../src/element");
+const { ImageElement, HeadingElement, ListElement } = require("../src/element");
 const { MarkDownReader } = require("../src/reader");
 
 describe("read", function () {
@@ -53,6 +53,7 @@ describe("read", function () {
         r.parseText('## hello there');
         const root = r.getRootElement();
         const e = root.getChildren()[0];
+        expect(e).toBeInstanceOf(HeadingElement);
         expect(e.getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(2);
     });
@@ -60,6 +61,7 @@ describe("read", function () {
         r.parseText('### hello there');
         const root = r.getRootElement();
         const e = root.getChildren()[0];
+        expect(e).toBeInstanceOf(HeadingElement);
         expect(e.getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(3);
     });
@@ -67,7 +69,15 @@ describe("read", function () {
         r.parseText('#### hello there');
         const root = r.getRootElement();
         const e = root.getChildren()[0];
+        expect(e).toBeInstanceOf(HeadingElement);
         expect(e.getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(4);
+    });
+    it("read a bullet", function () {
+        r.parseText('* hello there');
+        const root = r.getRootElement();
+        const e = root.getChildren()[0];
+        expect(e).toBeInstanceOf(ListElement);
+        expect(e.getText()).toEqual('hello there');
     });
 });

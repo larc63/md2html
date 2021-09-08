@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Markdown to html converter",
   "scripts": {
-  "test": "gulp test"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
