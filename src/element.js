@@ -51,7 +51,14 @@ class ListElement extends Element {
     }
 }
 
+class BoldElement extends Element {
+    constructor(t) {
+        super(t);
+    }
+}
+
 exports.Element = Element;
 exports.HeadingElement = HeadingElement;
 exports.ImageElement = ImageElement;
 exports.ListElement = ListElement;
+exports.BoldElement = BoldElement;

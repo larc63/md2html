@@ -1,4 +1,5 @@
 const {
+    BoldElement,
     Element,
     HeadingElement,
     ImageElement,
@@ -7,11 +8,41 @@ const {
 const IMAGE_PATTERN = /!\[(.*)\]\("(.*)"\)/;
 const BOLD_PATTERN = /\*\*(.*)\*\*/;
 const ITALIC_PATTERN = /\*(.*)\*/;
-const DEBUG_READER = false;
+const DEBUG_READER = !false;
 class MarkDownReader {
     constructor() {
         this.root = new Element();
     }
+
+    parseTextInner(e) {
+        let t = e.getText();
+        const boldMatcher = t.match(BOLD_PATTERN);
+        // const italicMatcher = t.match(ITALIC_PATTERN);
+        if (boldMatcher && boldMatcher.length > 0) {
+            const retVal = [];
+            const a = t.split('**');
+            if (DEBUG_READER) {
+                console.log(`adding a bold section: ${a}`);
+            }
+            e.setText(a[0]);
+            retVal.push(e);
+            for (let i = 1; i < a.length; i++) {
+                const b = a[i];
+                if (i % 2 == 0) {
+                    if (b.length > 0) {
+                        retVal.push(new Element(b));
+                    }
+                } else {
+                    if (b.length > 0) {
+                        retVal.push(new BoldElement(b));
+                    }
+                }
+            }
+            return retVal;
+        }
+        return [e];
+    }
+
     parseText(t) {
         let lines = t.split('\n');
         let root = this.root;
@@ -62,7 +93,13 @@ class MarkDownReader {
                 e = new Element(l);
             }
             // add the identified child(ren)
-            root.addChild(e);
+            const elementsToAdd = this.parseTextInner(e);
+            if (DEBUG_READER) {
+                console.log(`adding children: ${elementsToAdd.map(e => e.getText())}`);
+            }
+            elementsToAdd.forEach(element => {
+                root.addChild(element);
+            });
         }
     }
     getStructure() {
