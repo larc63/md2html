@@ -1,7 +1,7 @@
 class Element {
     constructor(t){
         this.isRoot = false;
-        this.text = t;
+        this.text = t?.trim();
         this.children = [];
     }
     setAsRoot(){
@@ -57,8 +57,15 @@ class BoldElement extends Element {
     }
 }
 
+class ItalicElement extends Element {
+    constructor(t) {
+        super(t);
+    }
+}
+
 exports.Element = Element;
 exports.HeadingElement = HeadingElement;
 exports.ImageElement = ImageElement;
 exports.ListElement = ListElement;
 exports.BoldElement = BoldElement;
+exports.ItalicElement = ItalicElement;

@@ -3,6 +3,7 @@ const {
     Element,
     HeadingElement,
     ImageElement,
+    ItalicElement,
     ListElement
 } = require("../src/element");
 const {
@@ -21,7 +22,7 @@ describe("read", function () {
     it("read a one liner", function () {
         r.parseText('hello there');
         const root = r.getRootElement();
-        const e = root.getChildren()[0];
+        const e = root.getChildren()[0].getChildren()[0];
         expect(e.getText()).toEqual('hello there');
     });
     it("read a single image", function () {
@@ -42,7 +43,7 @@ describe("read", function () {
         const children = root.getChildren();
         expect(children.length).toEqual(2);
 
-        const pt = children[0];
+        const pt = children[0].getChildren()[0];
         expect(pt.getText()).toEqual('this is one line');
 
         const image = children[1];
@@ -54,7 +55,7 @@ describe("read", function () {
         r.parseText('# hello there');
         const root = r.getRootElement();
         const e = root.getChildren()[0];
-        expect(e.getText()).toEqual('hello there');
+        expect(e.getChildren()[0].getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(1);
     });
     it("read a h2", function () {
@@ -62,7 +63,7 @@ describe("read", function () {
         const root = r.getRootElement();
         const e = root.getChildren()[0];
         expect(e).toBeInstanceOf(HeadingElement);
-        expect(e.getText()).toEqual('hello there');
+        expect(e.getChildren()[0].getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(2);
     });
     it("read a h3", function () {
@@ -70,7 +71,7 @@ describe("read", function () {
         const root = r.getRootElement();
         const e = root.getChildren()[0];
         expect(e).toBeInstanceOf(HeadingElement);
-        expect(e.getText()).toEqual('hello there');
+        expect(e.getChildren()[0].getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(3);
     });
     it("read a h4", function () {
@@ -78,7 +79,7 @@ describe("read", function () {
         const root = r.getRootElement();
         const e = root.getChildren()[0];
         expect(e).toBeInstanceOf(HeadingElement);
-        expect(e.getText()).toEqual('hello there');
+        expect(e.getChildren()[0].getText()).toEqual('hello there');
         expect(e.getLevel()).toEqual(4);
     });
     it("read a bullet", function () {
@@ -86,47 +87,122 @@ describe("read", function () {
         const root = r.getRootElement();
         const e = root.getChildren()[0];
         expect(e).toBeInstanceOf(ListElement);
-        expect(e.getText()).toEqual('hello there');
+        expect(e.getChildren()[0].getText()).toEqual('hello there');
     });
     it("read 2 bullets", function () {
         r.parseText('* hello there\n* General Kenobi!');
         const root = r.getRootElement();
         const e = root.getChildren()[0];
         expect(e).toBeInstanceOf(ListElement);
-        expect(e.getText()).toEqual('hello there');
+        expect(e.getChildren()[0].getText()).toEqual('hello there');
         const f = root.getChildren()[1];
         expect(f).toBeInstanceOf(ListElement);
-        expect(f.getText()).toEqual('General Kenobi!');
+        expect(f.getChildren()[0].getText()).toEqual('General Kenobi!');
     });
-    it("read a bullet with 2 bold sections text", function () {
-        r.parseText('* hello **there** -- GENERAL **Kenobi**!!!');
-        const root = r.getRootElement();
-        let e = root.getChildren()[0];
-        expect(e).toBeInstanceOf(ListElement);
-        expect(e.getText()).toEqual('hello ');
-        e = root.getChildren()[1];
-        expect(e).toBeInstanceOf(BoldElement);
-        expect(e.getText()).toEqual('there');
-        e = root.getChildren()[2];
-        expect(e).toBeInstanceOf(Element);
-        expect(e.getText()).toEqual(' -- GENERAL ');
-        e = root.getChildren()[3];
-        expect(e).toBeInstanceOf(BoldElement);
-        expect(e.getText()).toEqual('Kenobi');
-        e = root.getChildren()[4];
-        expect(e).toBeInstanceOf(Element);
-        expect(e.getText()).toEqual('!!!');
-        expect(root.getChildren().length).toEqual(5);
-    });
-    xit("read a bullet with italic text", function () {
+    it("a bullet with bold text", function () {
         r.parseText('* hello **there**');
         const root = r.getRootElement();
-        let e = root.getChildren()[0];
+        const list = root.getChildren()[0];
+        expect(list).toBeInstanceOf(ListElement);
+        expect(list.getChildren()[0].getText()).toEqual('hello');
+        const c = list.getChildren()[1];
+        expect(c).toBeInstanceOf(BoldElement);
+        expect(c.getText()).toEqual('there');
+        expect(root.getChildren().length).toEqual(1);
+        expect(list.getChildren().length).toEqual(2);
+    });
+    it("a bullet with bold text at the beginning", function () {
+        r.parseText('* **hello** there');
+        const root = r.getRootElement();
+        const e = root.getChildren()[0];
         expect(e).toBeInstanceOf(ListElement);
-        expect(e.getText()).toEqual('hello ');
-        e = root.getChildren()[1];
+        expect(e.getText()).toEqual('');
+
+        let c = e.getChildren()[0];
+        expect(c).toBeInstanceOf(BoldElement);
+        expect(c.getText()).toEqual('hello');
+
+        c = e.getChildren()[1];
+        expect(c).toBeInstanceOf(Element);
+        expect(c.getText()).toEqual('there');
+
+        expect(e.getChildren().length).toEqual(2);
+    });
+    it("a paragraph with bold text at the beginning", function () {
+        r.parseText('**hello** there');
+        const root = r.getRootElement();
+        const e = root.getChildren()[0];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('');
+
+        let c = e.getChildren()[0];
+        expect(c).toBeInstanceOf(BoldElement);
+        expect(c.getText()).toEqual('hello');
+
+        c = e.getChildren()[1];
+        expect(c).toBeInstanceOf(Element);
+        expect(c.getText()).toEqual('there');
+
+        expect(e.getChildren().length).toEqual(2);
+    });
+
+    it("a bullet with 2 bold sections text", function () {
+        r.parseText('* hello **there** -- GENERAL **Kenobi**!!!');
+        const root = r.getRootElement();
+        let p = root.getChildren()[0];
+        expect(p).toBeInstanceOf(ListElement);
+        expect(p.getText()).toEqual('');
+        let e = p.getChildren()[0];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('hello');
+        e = p.getChildren()[1];
         expect(e).toBeInstanceOf(BoldElement);
         expect(e.getText()).toEqual('there');
-        expect(root.getChildren().length).toEqual(2);
+        e = p.getChildren()[2];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('-- GENERAL');
+        e = p.getChildren()[3];
+        expect(e).toBeInstanceOf(BoldElement);
+        expect(e.getText()).toEqual('Kenobi');
+        e = p.getChildren()[4];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('!!!');
+        expect(p.getChildren().length).toEqual(5);
+    });
+    it("a bullet with italic text", function () {
+        r.parseText('* hello *there*');
+        const root = r.getRootElement();
+        let list = root.getChildren()[0];
+        expect(list).toBeInstanceOf(ListElement);
+        expect(list.getText()).toEqual('');
+
+        let e = list.getChildren()[0];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('hello');
+
+        e = list.getChildren()[1];
+        expect(e).toBeInstanceOf(ItalicElement);
+        expect(e.getText()).toEqual('there');
+        expect(root.getChildren().length).toEqual(1);
+    });
+    it("a bullet with italic and bold text", function () {
+        r.parseText('* hello *there* this is **bold**');
+        const root = r.getRootElement();
+        let list = root.getChildren()[0];
+        expect(list).toBeInstanceOf(ListElement);
+        expect(list.getText()).toEqual('');
+        let e = list.getChildren()[0];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('hello');
+        e = list.getChildren()[1];
+        expect(e).toBeInstanceOf(ItalicElement);
+        expect(e.getText()).toEqual('there');
+        e = list.getChildren()[2];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('this is');
+        e = list.getChildren()[3];
+        expect(e).toBeInstanceOf(Element);
+        expect(e.getText()).toEqual('bold');
+        expect(root.getChildren().length).toEqual(1);
     });
 });

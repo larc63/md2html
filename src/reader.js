@@ -3,49 +3,72 @@ const {
     Element,
     HeadingElement,
     ImageElement,
+    ItalicElement,
     ListElement
 } = require('./element');
 const IMAGE_PATTERN = /!\[(.*)\]\("(.*)"\)/;
-const BOLD_PATTERN = /\*\*(.*)\*\*/;
-const ITALIC_PATTERN = /\*(.*)\*/;
-const DEBUG_READER = !false;
+const DEBUG_READER = false;
 class MarkDownReader {
     constructor() {
         this.root = new Element();
+        this.root.setAsRoot();
     }
 
     parseTextInner(e) {
-        let t = e.getText();
-        const boldMatcher = t.match(BOLD_PATTERN);
-        // const italicMatcher = t.match(ITALIC_PATTERN);
-        if (boldMatcher && boldMatcher.length > 0) {
-            const retVal = [];
-            const a = t.split('**');
-            if (DEBUG_READER) {
-                console.log(`adding a bold section: ${a}`);
-            }
-            e.setText(a[0]);
-            retVal.push(e);
-            for (let i = 1; i < a.length; i++) {
-                const b = a[i];
-                if (i % 2 == 0) {
-                    if (b.length > 0) {
-                        retVal.push(new Element(b));
-                    }
-                } else {
-                    if (b.length > 0) {
-                        retVal.push(new BoldElement(b));
-                    }
-                }
-            }
-            return retVal;
+        let i = 0;
+        let t = e.getText().replaceAll('**', '/b');
+        e.setText('');
+        t = t.replaceAll('*', '/i');
+        if (DEBUG_READER) {
+            console.log(`${t}\n`);
         }
-        return [e];
+        do {
+            if (DEBUG_READER) {
+                console.log(`${i} - ${t}`);
+            }
+            let startB = t.indexOf('/b');
+            let startI = t.indexOf('/i');
+            let s;
+            if (startB === -1 && startI === -1) { // no more tags left
+                if (DEBUG_READER) {
+                    console.log('A');
+                }
+                e.addChild(new Element(t));
+                break;
+            } else if (startB === 0 || startI === 0) { // tags are at the beginning
+                // consume the token
+                if (DEBUG_READER) {
+                    console.log('B');
+                }
+                t = t.substring(2);
+                if (startB === 0) {
+                    s = t.substring(0, t.indexOf('/b'));
+                    e.addChild(new BoldElement(s));
+                } else {
+                    s = t.substring(0, t.indexOf('/i'));
+                    e.addChild(new ItalicElement(s));
+                }
+                t = t.substring(s.length + 2);
+            } else { // plain text at the beginning
+                if (DEBUG_READER) {
+                    console.log('C');
+                }
+                startB = startB === -1 ? 9999 : startB;
+                startI = startI === -1 ? 9999 : startI;
+                if (startB < startI) {
+                    s = t.substring(0, startB);
+                } else {
+                    s = t.substring(0, startI);
+                }
+                e.addChild(new Element(s));
+                t = t.substring(s.length);
+            }
+            i++;
+        } while (t.length > 0);
     }
 
     parseText(t) {
         let lines = t.split('\n');
-        let root = this.root;
         let e;
         for (let l of lines) {
             const imageMatcher = l.match(IMAGE_PATTERN);
@@ -93,13 +116,11 @@ class MarkDownReader {
                 e = new Element(l);
             }
             // add the identified child(ren)
-            const elementsToAdd = this.parseTextInner(e);
+            this.parseTextInner(e);
+            this.root.addChild(e);
             if (DEBUG_READER) {
-                console.log(`adding children: ${elementsToAdd.map(e => e.getText())}`);
+                this.printTree();   
             }
-            elementsToAdd.forEach(element => {
-                root.addChild(element);
-            });
         }
     }
     getStructure() {
@@ -107,6 +128,16 @@ class MarkDownReader {
     }
     getRootElement() {
         return this.root;
+    }
+    print(pre, e){
+        console.log(`${pre}${e.getText()}(${e.constructor.name})`);
+        e.getChildren().forEach(element => {
+            this.print(`${pre}🔲`, element);
+        });
+    }
+    printTree() {
+        let pre = '';
+        this.print(pre, this.root);
     }
 };
 exports.MarkDownReader = MarkDownReader;
