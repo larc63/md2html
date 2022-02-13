@@ -35,6 +35,20 @@ class ImageElement extends Element{
     }
 }
 
+class LinkElement extends Element{
+    constructor(text, href){
+        super('');
+        this.innertext = text;
+        this.href = href;
+    }
+    getInnerText(){
+        return this.innertext;
+    }
+    getHref(){
+        return this.href;
+    }
+}
+
 class HeadingElement extends Element {
     constructor(t, level) {
         super(t);
@@ -65,6 +79,7 @@ class ItalicElement extends Element {
 
 exports.Element = Element;
 exports.HeadingElement = HeadingElement;
+exports.LinkElement = LinkElement;
 exports.ImageElement = ImageElement;
 exports.ListElement = ListElement;
 exports.BoldElement = BoldElement;

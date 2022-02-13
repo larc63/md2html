@@ -3,12 +3,13 @@ const {
     Element,
     HeadingElement,
     ImageElement,
+    LinkElement,
     ItalicElement,
     ListElement
 } = require("../src/element");
 const {
     MarkDownReader
-} = require("../src/reader");
+} = require("../src/mdreader");
 
 describe("read", function () {
     let r;
@@ -50,6 +51,24 @@ describe("read", function () {
         expect(image).toBeInstanceOf(ImageElement);
         expect(image.getAlt()).toEqual(alt);
         expect(image.getSrc()).toEqual(src);
+    });
+    it("read a single link", function () {
+        const text = 'some descriptive text';
+        const href = 'path/to/image.png';
+
+        r.parseText(`[${text}](${href})`);
+        // r.parseText(`![${alt}]("${src}")`);
+        const root = r.getRootElement();
+        const children = root.getChildren();
+        expect(children.length).toEqual(1);
+
+        // const pt = children[0].getChildren()[0];
+        // expect(pt.getText()).toEqual('this is one line');
+
+        const link = children[0];
+        expect(link).toBeInstanceOf(LinkElement);
+        expect(link.getInnerText()).toEqual(text);
+        expect(link.getHref()).toEqual(href);
     });
     it("read a h1", function () {
         r.parseText('# hello there');

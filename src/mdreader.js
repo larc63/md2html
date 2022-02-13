@@ -3,10 +3,12 @@ const {
     Element,
     HeadingElement,
     ImageElement,
+    LinkElement,
     ItalicElement,
     ListElement
 } = require('./element');
 const IMAGE_PATTERN = /!\[(.*)\]\("(.*)"\)/;
+const LINK_PATTERN = /\[(.*)\]\((.*)\)/;
 const DEBUG_READER = false;
 class MarkDownReader {
     constructor() {
@@ -72,6 +74,7 @@ class MarkDownReader {
         let e;
         for (let l of lines) {
             const imageMatcher = l.match(IMAGE_PATTERN);
+            const linkMatcher = l.match(LINK_PATTERN);
             if (imageMatcher && imageMatcher.length > 0) {
                 if (DEBUG_READER) {
                     console.log(`adding an image: ${l}`);
@@ -79,6 +82,13 @@ class MarkDownReader {
                 const alt = imageMatcher[1];
                 const src = imageMatcher[2];
                 e = new ImageElement(alt, src);
+            } else if (linkMatcher && linkMatcher.length > 0) {
+                if (DEBUG_READER) {
+                    console.log(`adding a link: ${l}`);
+                }
+                const text = linkMatcher[1];
+                const href = linkMatcher[2];
+                e = new LinkElement(text, href);
             } else if (l.startsWith('* ')) {
                 l = l.substring(2);
                 if (DEBUG_READER) {
