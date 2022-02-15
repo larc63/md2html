@@ -75,7 +75,7 @@ class MarkDownReader {
         for (let l of lines) {
             const imageMatcher = l.match(IMAGE_PATTERN);
             const linkMatcher = l.match(LINK_PATTERN);
-            if (imageMatcher && imageMatcher.length > 0) {
+            if (imageMatcher && imageMatcher.length > 0 && l.startsWith('![')) {
                 if (DEBUG_READER) {
                     console.log(`adding an image: ${l}`);
                 }
@@ -88,7 +88,16 @@ class MarkDownReader {
                 }
                 const text = linkMatcher[1];
                 const href = linkMatcher[2];
-                e = new LinkElement(text, href);
+                const imgMatch = text.match(IMAGE_PATTERN);
+                if (imgMatch && imgMatch.length > 0) {                
+                    e = new LinkElement('', href);
+                    const alt = imgMatch[1];
+                    const src = imgMatch[2];
+                    const f = new ImageElement(alt, src);
+                    e.addChild(f);
+                } else {
+                    e = new LinkElement(text, href);
+                }
             } else if (l.startsWith('* ')) {
                 l = l.substring(2);
                 if (DEBUG_READER) {

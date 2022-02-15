@@ -52,18 +52,35 @@ describe("read", function () {
         expect(image.getAlt()).toEqual(alt);
         expect(image.getSrc()).toEqual(src);
     });
+    it("read a single link with an image", function () {
+        const href = 'path/to/image.png';
+        const alt = 'some descriptive text';
+        const src = 'path/to/image.png';
+        const img = `![${alt}]("${src}")`;
+
+        r.parseText(`[${img}](${href})`);
+        const root = r.getRootElement();
+        const children = root.getChildren();
+        expect(children.length).toEqual(1);
+
+        const link = children[0];
+        expect(link).toBeInstanceOf(LinkElement);
+        expect(link.getInnerText()).toEqual('');
+        expect(link.getHref()).toEqual(href);
+
+        const image = link.getChildren()[0];
+        expect(image).toBeInstanceOf(ImageElement);
+        expect(image.getAlt()).toEqual(alt);
+        expect(image.getSrc()).toEqual(src);
+    });
     it("read a single link", function () {
         const text = 'some descriptive text';
         const href = 'path/to/image.png';
 
         r.parseText(`[${text}](${href})`);
-        // r.parseText(`![${alt}]("${src}")`);
         const root = r.getRootElement();
         const children = root.getChildren();
         expect(children.length).toEqual(1);
-
-        // const pt = children[0].getChildren()[0];
-        // expect(pt.getText()).toEqual('this is one line');
 
         const link = children[0];
         expect(link).toBeInstanceOf(LinkElement);
