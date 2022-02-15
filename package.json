@@ -21,6 +21,7 @@
   "homepage": "https://github.com/larc63/md2html#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
-    "jasmine": "^3.7.0"
+    "jasmine": "^3.7.0",
+    "jasmine-spec-reporter": "^7.0.0"
   }
 }
