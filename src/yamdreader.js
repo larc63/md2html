@@ -9,7 +9,11 @@ class YaMdReader {
         this.body;
     }
 
-    parse() {}
+    parse(contents) {
+        const c = contents.split('---\n');
+        this.header = c[1];
+        this.body = c[2];
+    }
     parseHeader() {
         let parseTags = false;
         let title, date, thumb, hero, tags = [];
