@@ -40,6 +40,7 @@ describe('MDReader', () => {
             const alt = 'some descriptive text';
             const src = 'path/to/image.png';
             r.parseText(`this is one line\n![${alt}]("${src}")`);
+            r.printTree();
             const root = r.getRootElement();
             const children = root.getChildren();
             expect(children.length).toEqual(2);
