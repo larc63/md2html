@@ -40,7 +40,6 @@ describe('MDReader', () => {
             const alt = 'some descriptive text';
             const src = 'path/to/image.png';
             r.parseText(`this is one line\n![${alt}]("${src}")`);
-            r.printTree();
             const root = r.getRootElement();
             const children = root.getChildren();
             expect(children.length).toEqual(2);
@@ -92,7 +91,7 @@ describe('MDReader', () => {
             r.parseText('# hello there');
             const root = r.getRootElement();
             const e = root.getChildren()[0];
-            expect(e.getChildren()[0].getText()).toEqual('hello there');
+            expect(e.getText()).toEqual('hello there');
             expect(e.getLevel()).toEqual(1);
         });
         it("read a h2", function () {
@@ -100,7 +99,7 @@ describe('MDReader', () => {
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(HeadingElement);
-            expect(e.getChildren()[0].getText()).toEqual('hello there');
+            expect(e.getText()).toEqual('hello there');
             expect(e.getLevel()).toEqual(2);
         });
         it("read a h3", function () {
@@ -108,7 +107,7 @@ describe('MDReader', () => {
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(HeadingElement);
-            expect(e.getChildren()[0].getText()).toEqual('hello there');
+            expect(e.getText()).toEqual('hello there');
             expect(e.getLevel()).toEqual(3);
         });
         it("read a h4", function () {
@@ -116,7 +115,7 @@ describe('MDReader', () => {
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(HeadingElement);
-            expect(e.getChildren()[0].getText()).toEqual('hello there');
+            expect(e.getText()).toEqual('hello there');
             expect(e.getLevel()).toEqual(4);
         });
         it("read a bullet", function () {
@@ -124,10 +123,12 @@ describe('MDReader', () => {
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(ListElement);
-            expect(e.getChildren()[0].getText()).toEqual('hello there');
+            const c = e.getChildren()[0];
+            expect(c.getText()).toEqual('hello there');
         });
         it("read 2 bullets", function () {
             r.parseText('* hello there\n* General Kenobi!');
+            r.printTree();
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(ListElement);

@@ -72,4 +72,90 @@ describe('writer', () => {
         const r = w.getHTML(root);
         expect(r).toEqual('<div><div><p>this is one line</p></div><img alt="image alt" src="somewhere.com/image.jpg" /><p>Image text here</p></div>');
     });
+    it('link and paragraph', () => {
+        // undefined(Element)
+        const root = new Element();
+        root.setAsRoot();
+        // 🔲(LinkElement)
+        // 🔲🔲(ImageElement)
+        // 🔲🔲(Element)
+
+        const le = new LinkElement('link text','http://www.lavacahacemu.com');
+        root.addChild(le);
+
+        const ie = new ImageElement('image alt', 'somewhere.com/image.jpg');
+        le.addChild(ie);
+
+        const child4 = new Element();
+        child4.setText('text here');
+        le.addChild(child4);
+
+        const r = w.getHTML(root);
+        expect(r).toEqual('<div><a href="http://www.lavacahacemu.com">link text<img alt="image alt" src="somewhere.com/image.jpg" /><p>text here</p></a></div>');
+    });
+    it('h1', () => {
+        // undefined(Element)
+        const root = new Element();
+        root.setAsRoot();
+        // 🔲this is heading 1(HeadingElement)
+
+        const he = new HeadingElement('this is heading 1', 1);
+        root.addChild(he);
+
+        const r = w.getHTML(root);
+        expect(r).toEqual('<div><h1>this is heading 1</h1></div>');
+    });
+    it('h2', () => {
+        // undefined(Element)
+        const root = new Element();
+        root.setAsRoot();
+        // 🔲this is heading 2(HeadingElement)
+
+        const he = new HeadingElement('this is heading 2', 2);
+        root.addChild(he);
+
+        const r = w.getHTML(root);
+        expect(r).toEqual('<div><h2>this is heading 2</h2></div>');
+    });
+    it('h3', () => {
+        // undefined(Element)
+        const root = new Element();
+        root.setAsRoot();
+        // 🔲this is heading 3(HeadingElement)
+
+        const he = new HeadingElement('this is heading 3', 3);
+        root.addChild(he);
+
+        const r = w.getHTML(root);
+        expect(r).toEqual('<div><h3>this is heading 3</h3></div>');
+    });
+    it('h4', () => {
+        // undefined(Element)
+        const root = new Element();
+        root.setAsRoot();
+        // 🔲this is heading 4(HeadingElement)
+
+        const he = new HeadingElement('this is heading 4', 4);
+        root.addChild(he);
+
+        const r = w.getHTML(root);
+        expect(r).toEqual('<div><h4>this is heading 4</h4></div>');
+    });
+    // it('one bullet', () => {
+    //     // undefined(Element)
+    //     const root = new Element();
+    //     root.setAsRoot();
+    //     // 🔲(ListElement)
+    //     // 🔲🔲hello there(Element)
+
+    //     const le = new ListElement();
+    //     root.addChild(le);
+
+    //     const child4 = new Element();
+    //     child4.setText('This is a bullet');
+    //     le.addChild(child4);
+
+    //     const r = w.getHTML(root);
+    //     expect(r).toEqual('<div><h4>this is heading 4</h4></div>');
+    // });
 });

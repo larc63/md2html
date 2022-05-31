@@ -135,7 +135,9 @@ class MarkDownReader {
                 e = new Element(l);
             }
             // add the identified child(ren)
-            this.parseTextInner(e);
+            if (!(e instanceof HeadingElement)) {
+                this.parseTextInner(e);   
+            }
             this.root.addChild(e);
             if (DEBUG_READER) {
                 this.printTree();   
