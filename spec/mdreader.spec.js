@@ -128,7 +128,6 @@ describe('MDReader', () => {
         });
         it("read 2 bullets", function () {
             r.parseText('* hello there\n* General Kenobi!');
-            r.printTree();
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(ListElement);

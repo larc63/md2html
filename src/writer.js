@@ -11,26 +11,28 @@ const {
 class HTMLWriter {
     constructor() {
         this.parsingList = false;
+        this.parsingList = false;
     }
 
     getOpeningTag(e) {
         if (e instanceof BoldElement) {
-            return '<b>';
+            return ' <b>';
+        } else if (e instanceof ItalicElement) {
+            return ' <i>';
         } else if (e instanceof HeadingElement) {
             return `<h${e.getLevel()}>`;
         } else if (e instanceof ImageElement) {
             return `<img alt="${e.getAlt()}" src="${e.getSrc()}" />`;
         } else if (e instanceof LinkElement) {
-            return `<a href="${e.getHref()}">${e.getInnerText()}`;
+            return ` <a href="${e.getHref()}">${e.getInnerText()}`;
         } else if (e instanceof ListElement) {
             this.parsingList = true;
             return '<li>';
         } else if (e instanceof Element) {
             if (this.parsingList === true) {
-                this.parsingList = false;
                 return '';
             } else if (e.getText()) {
-                return '<p>';
+                return '';
             } else {
                 return '<div>';
             }
@@ -39,21 +41,23 @@ class HTMLWriter {
 
     getClosingTag(e) {
         if (e instanceof BoldElement) {
-            return '</b>';
+            return '</b> ';
+        } else if (e instanceof ItalicElement) {
+            return '</i> ';
         } else if (e instanceof HeadingElement) {
             return `</h${e.getLevel()}>`;
         } else if (e instanceof ImageElement) {
             return '';
         } else if (e instanceof LinkElement) {
-            return '</a>';
+            return '</a> ';
         } else if (e instanceof ListElement) {
+            this.parsingList = false;
             return '</li>';
         } else if (e instanceof Element) {
             if (this.parsingList === true) {
-                this.parsingList = false;
                 return '';
             } else if (e.getText()) {
-                return '</p>'
+                return ''
             } else {
                 return '</div>';
             }
@@ -97,6 +101,10 @@ class HTMLWriter {
 
     getHTML(e) {
         let retVal = this.getHTMLInner(e);
+        retVal = retVal.replaceAll('</li><li>', '|||');
+        retVal = retVal.replaceAll('</li>', '</li></ul>');
+        retVal = retVal.replaceAll('<li>', '<ul><li>');
+        retVal = retVal.replaceAll('|||', '</li><li>');
         return retVal;
     }
 }
