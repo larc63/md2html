@@ -7,7 +7,7 @@ const {
     ItalicElement,
     ListElement
 } = require('./element');
-const IMAGE_PATTERN = /!\[(.*)\]\("(.*)"\)/;
+const IMAGE_PATTERN = /!\[(.*)\]\((.*)\)/;
 const LINK_PATTERN = /\[(.*)\]\((.*)\)/;
 const DEBUG_READER = false;
 class MarkDownReader {
@@ -89,13 +89,19 @@ class MarkDownReader {
                 const text = linkMatcher[1];
                 const href = linkMatcher[2];
                 const imgMatch = text.match(IMAGE_PATTERN);
-                if (imgMatch && imgMatch.length > 0) {                
+                if (imgMatch && imgMatch.length > 0) {
+                    if (DEBUG_READER) {
+                        console.log(`adding an image: ${text}`);
+                    }
                     e = new LinkElement('', href);
                     const alt = imgMatch[1];
                     const src = imgMatch[2];
                     const f = new ImageElement(alt, src);
                     e.addChild(f);
                 } else {
+                    if (DEBUG_READER) {
+                        console.log(`adding a link with text: ${text}`);
+                    }
                     e = new LinkElement(text, href);
                 }
             } else if (l.startsWith('* ')) {
@@ -136,11 +142,11 @@ class MarkDownReader {
             }
             // add the identified child(ren)
             if (!(e instanceof HeadingElement)) {
-                this.parseTextInner(e);   
+                this.parseTextInner(e);
             }
             this.root.addChild(e);
             if (DEBUG_READER) {
-                this.printTree();   
+                this.printTree();
             }
         }
     }

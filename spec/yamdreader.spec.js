@@ -57,7 +57,7 @@ describe('YAMDReader', () => {
             r.header = header;
             const post = r.parseHeader();
 
-            expect(post.title).toEqual('"Abejita"');
+            expect(post.title).toEqual('Abejita');
             expect(post.date).toEqual('2011/2/1 8:0:0');
             expect(post.thumb).toEqual('DSC02060-500px.webp');
             expect(post.hero).toEqual('DSC02060-original.webp');

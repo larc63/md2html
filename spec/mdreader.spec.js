@@ -29,7 +29,7 @@ describe('MDReader', () => {
         it("read a single image", function () {
             const alt = 'some descriptive text';
             const src = 'path/to/image.png';
-            r.parseText(`![${alt}]("${src}")`);
+            r.parseText(`![${alt}](${src})`);
             const root = r.getRootElement();
             const e = root.getChildren()[0];
             expect(e).toBeInstanceOf(ImageElement);
@@ -39,7 +39,7 @@ describe('MDReader', () => {
         it("read a single image", function () {
             const alt = 'some descriptive text';
             const src = 'path/to/image.png';
-            r.parseText(`this is one line\n![${alt}]("${src}")`);
+            r.parseText(`this is one line\n![${alt}](${src})`);
             const root = r.getRootElement();
             const children = root.getChildren();
             expect(children.length).toEqual(2);
@@ -56,7 +56,7 @@ describe('MDReader', () => {
             const href = 'path/to/image.png';
             const alt = 'some descriptive text';
             const src = 'path/to/image.png';
-            const img = `![${alt}]("${src}")`;
+            const img = `![${alt}](${src})`;
     
             r.parseText(`[${img}](${href})`);
             const root = r.getRootElement();
@@ -72,6 +72,24 @@ describe('MDReader', () => {
             expect(image).toBeInstanceOf(ImageElement);
             expect(image.getAlt()).toEqual(alt);
             expect(image.getSrc()).toEqual(src);
+        });
+        it("read an image link", function () {
+            // [![](DSC02060-800px.webp)](DSC02060-original.webp)
+            r.parseText('[![](DSC02060-800px.webp)](DSC02060-original.webp)');
+            r.printTree();
+            const root = r.getRootElement();
+            const children = root.getChildren();
+            expect(children.length).toEqual(1);
+    
+            const link = children[0];
+            expect(link).toBeInstanceOf(LinkElement);
+            expect(link.getInnerText()).toEqual('');
+            expect(link.getHref()).toEqual('DSC02060-original.webp');
+    
+            const image = link.getChildren()[0];
+            expect(image).toBeInstanceOf(ImageElement);
+            expect(image.getAlt()).toEqual('');
+            expect(image.getSrc()).toEqual('DSC02060-800px.webp');
         });
         it("read a single link", function () {
             const text = 'some descriptive text';

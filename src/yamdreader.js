@@ -9,7 +9,7 @@ class YaMdReader {
         this.body;
     }
 
-    parse(contents) {
+    setData(contents) {
         const c = contents.split('---\n');
         this.header = c[1];
         this.body = c[2];
@@ -22,7 +22,7 @@ class YaMdReader {
             console.log(line)
             if (line.startsWith('title:')) {
                 parseTags = false;
-                title = line.substring(6).trim();
+                title = line.substring(6).trim().replaceAll('"', '');
                 console.log(`title=${title}`);
             } else if (line.startsWith('date:')) {
                 parseTags = false;
