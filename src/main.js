@@ -7,7 +7,6 @@ const TITLE_KEY = '%%TITLE%%';
 const BODY_KEY = '%%BODY%%';
 const HERO_KEY = '%%HERO%%';
 
-const mreader = new MarkDownReader();
 const yreader = new YaMdReader();
 const htmlWriter = new HTMLWriter();
 
@@ -22,7 +21,8 @@ const applyTemplate = (p, m, t) => {
 
 exports.getHTML = (mdContent, template) => {
     // console.log(`Contents \n\n ${mdContent}`);
-
+    const mreader = new MarkDownReader();
+    
     yreader.setData(mdContent);
     const postData = yreader.parseHeader();
 
@@ -30,5 +30,5 @@ exports.getHTML = (mdContent, template) => {
     const mdTree = mreader.parseText(yreader.body);
     mreader.printTree();
 
-    return applyTemplate(postData, mreader.getRootElement(), template);
+    return [postData, applyTemplate(postData, mreader.getRootElement(), template)];
 }
