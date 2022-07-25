@@ -12,6 +12,7 @@ tags:
 - insectos
 cover_image: DSC02060-original.webp
 cover_image_small: DSC02060-500px.webp
+description: a song with a bee for a picture of a bee
 `;
 
 describe('Integration', () => {
@@ -23,12 +24,13 @@ describe('Integration', () => {
         });
         beforeEach(() => {
             r = new YaMdReader();
+            r.setData(contents);
         });
         it("contains spec with an expectation", function () {
             expect(YaMdReader).toBeDefined;
         });
         it('split contents', () => {
-            r.parse(contents);
+            r.parseHeader();
             const ref = header.split('\n');
             const res = r.header.split('\n');
             expect(res[0]).toEqual(ref[0]);
@@ -62,6 +64,7 @@ describe('YAMDReader', () => {
             expect(post.thumb).toEqual('DSC02060-500px.webp');
             expect(post.hero).toEqual('DSC02060-original.webp');
             expect(post.tags).toEqual(['musica', 'insectos']);
+            expect(post.description).toEqual('a song with a bee for a picture of a bee');
 
         });
     });

@@ -6,6 +6,7 @@ tags:
 - insectos
 cover_image: DSC02060-original.webp
 cover_image_small: DSC02060-500px.webp
+description: a song with a bee for a picture of a bee
 ---
 
 [![](DSC02060-800px.webp)](DSC02060-original.webp)
