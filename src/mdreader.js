@@ -18,9 +18,9 @@ class MarkDownReader {
 
     parseTextInner(e) {
         let i = 0;
-        let t = e.getText().replaceAll('**', '/b');
+        let t = e.getText().replaceAll('**', '~b');
         e.setText('');
-        t = t.replaceAll('*', '/i');
+        t = t.replaceAll('*', '~i');
         if (DEBUG_READER) {
             console.log(`${t}\n`);
         }
@@ -28,8 +28,8 @@ class MarkDownReader {
             if (DEBUG_READER) {
                 console.log(`${i} - ${t}`);
             }
-            let startB = t.indexOf('/b');
-            let startI = t.indexOf('/i');
+            let startB = t.indexOf('~b');
+            let startI = t.indexOf('~i');
             let s;
             if (startB === -1 && startI === -1) { // no more tags left
                 if (DEBUG_READER) {
@@ -44,10 +44,10 @@ class MarkDownReader {
                 }
                 t = t.substring(2);
                 if (startB === 0) {
-                    s = t.substring(0, t.indexOf('/b'));
+                    s = t.substring(0, t.indexOf('~b'));
                     e.addChild(new BoldElement(s));
                 } else {
-                    s = t.substring(0, t.indexOf('/i'));
+                    s = t.substring(0, t.indexOf('~i'));
                     e.addChild(new ItalicElement(s));
                 }
                 t = t.substring(s.length + 2);
