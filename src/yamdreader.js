@@ -28,8 +28,9 @@ class YaMdReader {
                 parseTags = false;
                 date = line.substring(5).trim();
                 // console.log(`date=${date}`);
-            } else if (line.startsWith('description:')) {
+            } else if (line.startsWith('description:') || line.startsWith('Description:')) {
                 parseTags = false;
+                line = line.toLowerCase();
                 description = line.substring('description:'.length).trim();
                 // console.log(`thumb=${thumb}`);
             } else if (line.startsWith('cover_image_small:')) {

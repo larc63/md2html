@@ -17,7 +17,11 @@ const applyTemplate = (p, m, t) => {
     t = t.replace(TITLE_KEY, `${p.getTitle()}`);
     t = t.replace(BODY_KEY, `${htmlWriter.getHTML(m)}`);
     t = t.replace(HERO_KEY, `<img src="${p.getHero()}">`);
-    t = t.replace(DESCRIPTION_KEY, `<img src="${p.getDescription()}">`);
+    if (p.getDescription()) {
+        t = t.replace(DESCRIPTION_KEY, p.getDescription());
+    } else {
+        t = t.replace(DESCRIPTION_KEY, 'a blog post');
+    }
 
     return t;
 }
