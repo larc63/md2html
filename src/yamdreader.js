@@ -16,7 +16,7 @@ class YaMdReader {
     }
     parseHeader() {
         let parseTags = false;
-        let title, date, thumb, hero, description, tags = [];
+        let title, date, thumb, hero, description, linkinbio = false, tags = [];
         this.header.split('\n').forEach(line => {
             line = line.trim();
             // console.log(line)
@@ -33,6 +33,12 @@ class YaMdReader {
                 line = line.toLowerCase();
                 description = line.substring('description:'.length).trim();
                 // console.log(`thumb=${thumb}`);
+            } else if (line.startsWith('linkinbio:')) {
+                parseTags = false;
+                if(line.substring('linkinbio:'.length).trim() === 'true'){
+                    linkinbio = true;
+                }
+                console.log(`linkinbio=${linkinbio}`);
             } else if (line.startsWith('cover_image_small:')) {
                 parseTags = false;
                 thumb = line.substring('cover_image_small:'.length).trim();
@@ -50,7 +56,7 @@ class YaMdReader {
                 parseTags = false;
             }
         });
-        return new Post(title, date, thumb, hero, tags, description);
+        return new Post(title, date, thumb, hero, tags, description, linkinbio);
     }
 }
 exports.YaMdReader = YaMdReader;

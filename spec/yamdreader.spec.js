@@ -13,6 +13,7 @@ tags:
 cover_image: DSC02060-original.webp
 cover_image_small: DSC02060-500px.webp
 description: a song with a bee for a picture of a bee
+linkinbio: true
 `;
 
 describe('Integration', () => {
@@ -65,6 +66,7 @@ describe('YAMDReader', () => {
             expect(post.hero).toEqual('DSC02060-original.webp');
             expect(post.tags).toEqual(['musica', 'insectos']);
             expect(post.description).toEqual('a song with a bee for a picture of a bee');
+            expect(post.linkInBio).toEqual(true);
 
         });
     });
