@@ -22,7 +22,10 @@ class HTMLWriter {
         } else if (e instanceof HeadingElement) {
             return `<h${e.getLevel()}>`;
         } else if (e instanceof ImageElement) {
-            return `<img alt="${e.getAlt()}" src="${e.getSrc()}" />`;
+            return `<img alt="${e.getAlt()}"
+                        srcset="${e.getSrc()}-500px.webp 500w, ${e.getSrc()}-800px.webp 800w, ${e.getSrc()}-1200px.webp 1200w"
+                        sizes="(max-width: 800px) 500px, (max-width: 1200px) 800px, 1200px"
+                        src="${e.getSrc()}-800px.webp" />`;
         } else if (e instanceof LinkElement) {
             return ` <a href="${e.getHref()}">${e.getInnerText()}`;
         } else if (e instanceof ListElement) {
