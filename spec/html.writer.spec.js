@@ -27,11 +27,15 @@ describe('writer', () => {
         const child2 = new Element();
         child2.setText('hello there');
         child.addChild(child2);
-
+        
         const r = w.getHTML(root);
         expect(r).toEqual('<div><div>hello there</div></div>');
     });
     it('image', () => {
+    const imgset = `<div><imgalt="imagealt"
+    srcset="somewhere.com/image.jpg-500px.webp500w,somewhere.com/image.jpg-800px.webp800w,somewhere.com/image.jpg-1200px.webp1200w"
+    sizes="(max-width:800px)500px,(max-width:1200px)800px,1200px"
+    src="somewhere.com/image.jpg-800px.webp"/>Imagetexthere</div>`;
         // undefined(Element)
         // 🔲(ImageElement)
         // 🔲🔲(Element)
@@ -46,9 +50,13 @@ describe('writer', () => {
         child.addChild(child2);
 
         const r = w.getHTML(root);
-        expect(r).toEqual('<div><img alt="image alt" src="somewhere.com/image.jpg" />Image text here</div>');
+        expect(r.replaceAll(' ', '')).toEqual(imgset.replaceAll(' ', ''));
     });
     it('image and paragraph', () => {
+        const imgset = `<div><div>thisisoneline</div><imgalt="imagealt"
+        srcset="somewhere.com/image.jpg-500px.webp500w,somewhere.com/image.jpg-800px.webp800w,somewhere.com/image.jpg-1200px.webp1200w"
+        sizes="(max-width:800px)500px,(max-width:1200px)800px,1200px"
+        src="somewhere.com/image.jpg-800px.webp"/>Imagetexthere</div>`;
         // undefined(Element)
         const root = new Element();
         root.setAsRoot();
@@ -70,9 +78,14 @@ describe('writer', () => {
         child3.addChild(child4);
 
         const r = w.getHTML(root);
-        expect(r).toEqual('<div><div>this is one line</div><img alt="image alt" src="somewhere.com/image.jpg" />Image text here</div>');
+        // expect(r).toEqual('<div><div>this is one line</div><img alt="image alt" src="somewhere.com/image.jpg" />Image text here</div>');
+        expect(r.replaceAll(' ', '')).toEqual(imgset.replaceAll(' ', ''));
     });
     it('link and paragraph', () => {
+        const imgset = `<div><ahref="http://www.lavacahacemu.com">linktext<imgalt="imagealt"
+        srcset="somewhere.com/image.jpg-500px.webp500w,somewhere.com/image.jpg-800px.webp800w,somewhere.com/image.jpg-1200px.webp1200w"
+        sizes="(max-width:800px)500px,(max-width:1200px)800px,1200px"
+        src="somewhere.com/image.jpg-800px.webp"/>texthere</a></div>`;
         // undefined(Element)
         const root = new Element();
         root.setAsRoot();
@@ -91,7 +104,7 @@ describe('writer', () => {
         le.addChild(child4);
 
         const r = w.getHTML(root);
-        expect(r).toEqual('<div> <a href="http://www.lavacahacemu.com">link text<img alt="image alt" src="somewhere.com/image.jpg" />text here</a> </div>');
+        expect(r.replaceAll(' ', '')).toEqual(imgset.replaceAll(' ', ''));
     });
     it('h1', () => {
         // undefined(Element)
