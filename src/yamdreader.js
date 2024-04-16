@@ -7,12 +7,15 @@ class YaMdReader {
     constructor() {
         this.header;
         this.body;
+        this.social;
     }
 
     setData(contents) {
         const c = contents.split('---\n');
         this.header = c[1];
         this.body = c[2];
+        this.social = c.length>2? c[3] : undefined;
+        this.social = this.social?.trim();
     }
     parseHeader() {
         let parseTags = false;

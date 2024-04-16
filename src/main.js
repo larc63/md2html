@@ -36,6 +36,7 @@ exports.getHTML = (mdContent, template) => {
     // console.log(JSON.stringify(postData));
     mreader.parseText(yreader.body);
     // mreader.printTree();
+    mreader.description = yreader.social;
 
-    return [postData, applyTemplate(postData, mreader.getRootElement(), template)];
+    return [postData, applyTemplate(postData, mreader.getRootElement(), template), mreader.description];
 }

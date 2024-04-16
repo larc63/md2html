@@ -14,6 +14,7 @@ class MarkDownReader {
     constructor() {
         this.root = new Element();
         this.root.setAsRoot();
+        this.description;
     }
 
     parseTextInner(e) {
